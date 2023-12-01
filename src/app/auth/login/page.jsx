@@ -5,8 +5,10 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import useSessionStore from "@/app/stores/sessionStore";
 import axios from "axios";
+import { redirect, useRouter } from "next/navigation";
 
 const Login = () => {
+  const router = useRouter();
   const [error, setError] = useState("");
 
   const setUser = useSessionStore((state) => state.setUser);
@@ -28,9 +30,12 @@ const Login = () => {
     onSuccess: (response, variables, context) => {
       setUser({
         name: response?.data?.data?.nama,
-        token: response?.data?.token,
+        token: response?.data?.access_token,
       });
+
+      console.log(response?.data?.user?.name);
       setError("Success");
+      router.push("/");
     },
   });
 
@@ -48,12 +53,6 @@ const Login = () => {
       }, 3000);
       return;
     }
-
-    console.log(formData.get("email"));
-    const credentials = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-    };
     mutation.mutate(formData);
   }
 
