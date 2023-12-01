@@ -1,28 +1,67 @@
 "use client";
-import Sidebar from "@/components/Sidebar";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import useSessionStore from "@/app/stores/sessionStore";
+import axios from "axios";
 
 const Login = () => {
+  const [error, setError] = useState("");
+
+  const setUser = useSessionStore((state) => state.setUser);
+
+  const mutation = useMutation({
+    mutationFn: (credentials) => {
+      return axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/login`,
+        credentials
+      );
+    },
+    onError: (error, variables, context) => {
+      // console.log(error.response?.data?.data?.name[0])
+      setError("Email atau password salah.");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    },
+    onSuccess: (response, variables, context) => {
+      setUser({
+        name: response?.data?.data?.nama,
+        token: response?.data?.token,
+      });
+      setError("Success");
+    },
+  });
+
   async function onSubmit(event) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    // const response = await fetch("/api/submit", {
-    //   method: "POST",
-    //   body: formData,
-    // });
+    if (
+      formData.get("email") == "" ||
+      formData.get("password") == ""
+    ) {
+      setError("Mohon isi informasi anda.");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+      return;
+    }
 
-    // Handle response if necessary
-    // const data = await response.json();
     console.log(formData.get("email"));
+    const credentials = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+    mutation.mutate(formData);
   }
 
   return (
-    <main class="grid grid-cols-2">
+    <main className="grid grid-cols-2">
       <section>
         <Image
-          class="h-screen object-fill"
+          className="h-screen object-fill"
           src="/images/login-img.png"
           width={2885}
           height={2880}
@@ -30,24 +69,26 @@ const Login = () => {
         />
       </section>
 
-      <form onSubmit={(e) => onSubmit(e)}>
-        <section class="h-full flex flex-col gap-2 justify-center items-center px-32">
+      <form onSubmit={(e) => onSubmit(e)} method="post">
+        <section className="h-full flex flex-col gap-2 justify-center items-center px-32">
           <Image
-            class="w-full h-auto"
+            className="w-full h-auto"
             src="/images/logo-md.png"
             width={900}
             height={240}
             alt=""
           />
-          <h1 class="font-medium text-2xl">Presensi Perpustakaan</h1>
+          <h1 className="font-medium text-2xl">
+            Presensi Perpustakaan
+          </h1>
 
           {/* Email Form Group */}
-          <div class="w-full flex flex-col">
-            <label class="text-lg font-medium" for="email">
+          <div className="w-full flex flex-col">
+            <label className="text-lg font-medium" htmlFor="email">
               Email
             </label>
             <input
-              class="bg-light-gray px-2 py-1 rounded-md outline outline-1 outline-black"
+              className="bg-light-gray px-2 py-1 rounded-md outline outline-1 outline-black"
               type="text"
               name="email"
               id="email"
@@ -56,12 +97,12 @@ const Login = () => {
           </div>
 
           {/* Password Form Group */}
-          <div class="w-full flex flex-col">
-            <label class="text-lg font-medium" for="password">
+          <div className="w-full flex flex-col">
+            <label className="text-lg font-medium" htmlFor="password">
               Password
             </label>
             <input
-              class="bg-light-gray px-2 py-1 rounded-md outline outline-1 outline-black"
+              className="bg-light-gray px-2 py-1 rounded-md outline outline-1 outline-black"
               type="password"
               name="password"
               id="password"
@@ -69,9 +110,11 @@ const Login = () => {
             />
           </div>
 
+          <p className="self-start text-sm text-red-600">{error}</p>
+
           {/* Submit Button */}
           <button
-            class="w-full rounded-md py-0.5 my-2 bg-primary text-white font-medium hover:bg-transparent hover:text-primary transition outline-1 outline outline-primary"
+            className="w-full rounded-md py-0.5 my-2 bg-primary text-white font-medium hover:bg-transparent hover:text-primary transition outline-1 outline outline-primary"
             type="submit"
           >
             Login
