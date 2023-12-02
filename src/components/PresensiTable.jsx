@@ -59,7 +59,7 @@ const PresensiTable = () => {
         <span className="flex flex-row justify-center gap-3">
           {/* Tombol Update */}
           <Link
-            href={`/admin/presensi/update/${props.row.original.id}`}
+            href={`/admin/presensi/edit/${props.row.original.id}`}
             className="flex justify-center custom-outline w-10 py-2 hover:bg-primary hover:text-white transition"
           >
             <svg

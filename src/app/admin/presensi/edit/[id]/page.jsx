@@ -1,25 +1,43 @@
 "use client";
 
 import useSessionStore from "@/stores/sessionStore";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const CreatePresensi = () => {
+const EditPresensi = ({ params }) => {
+  const id = params.id;
   const router = useRouter();
+
   const [error, setError] = useState("");
   const token = useSessionStore((state) => state.token);
 
+  // Get Presensi
+  const { data, isLoading } = useQuery({
+    queryKey: [`presensi-show-${id}`],
+    queryFn: () =>
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/presensi/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+  });
+
+  const presensi = data?.data?.presensi;
+
+  // Update Presensi
   const mutation = useMutation({
     mutationFn: (formData) => {
-      return axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/presensi`,
-        formData,
+      return axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/presensi/${id}`,
+        // Konversi FormData menjadi x-www-form-urlencoded
+        new URLSearchParams(formData),
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            // Request PUT harus dalam bentuk x-www-form-urlencoded
+            "Content-Type": "application/x-www-form-urlencoded",
           },
         }
       );
@@ -44,7 +62,10 @@ const CreatePresensi = () => {
 
     const formData = new FormData(event.currentTarget);
     mutation.mutate(formData);
+    console.log(formData);
   }
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <main className="flex flex-col gap-2 py-2">
@@ -56,6 +77,7 @@ const CreatePresensi = () => {
           <div className="form-group flex flex-col">
             <label htmlFor="nis">NIS</label>
             <input
+              defaultValue={presensi?.nis}
               className="p-2 rounded-md border border-primary border-solid placeholder-slate-500"
               type="number"
               name="nis"
@@ -66,6 +88,7 @@ const CreatePresensi = () => {
           <div className="form-group flex flex-col">
             <label htmlFor="nama">Nama</label>
             <input
+              defaultValue={presensi?.nama}
               className="p-2 rounded-md border border-primary border-solid placeholder-slate-500"
               type="text"
               name="nama"
@@ -78,7 +101,7 @@ const CreatePresensi = () => {
             <input
               className="p-2 rounded-md border border-primary border-solid"
               type="date"
-              defaultValue={new Date().toISOString().substring(0, 10)}
+              defaultValue={presensi?.tanggal}
               name="tanggal"
               id="tanggal"
             />
@@ -96,4 +119,4 @@ const CreatePresensi = () => {
   );
 };
 
-export default CreatePresensi;
+export default EditPresensi;
