@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const navLinks = [
   {
@@ -160,7 +161,7 @@ const Sidebar = () => {
         <ul className="flex flex-col gap-4">
           {navLinks.map((link, index) => (
             <li key={index}>
-              <a
+              <Link
                 href={link.href}
                 className="flex flex-row gap-2 items-center"
               >
@@ -172,13 +173,13 @@ const Sidebar = () => {
                 >
                   {link.label}
                 </motion.p>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
       </div>
       {/* Logout */}
-      <a
+      <Link
         href="/auth/logout"
         className="flex flex-row gap-2 items-center"
       >
@@ -201,7 +202,7 @@ const Sidebar = () => {
         >
           Logout
         </motion.p>
-      </a>
+      </Link>
     </motion.aside>
   );
 };

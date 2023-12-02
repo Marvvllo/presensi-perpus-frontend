@@ -1,3 +1,4 @@
+import PresensiTable from "@/components/PresensiTable";
 import React from "react";
 
 const Admin = () => {
@@ -51,44 +52,7 @@ const Admin = () => {
       {/* Presensi Terbaru */}
       <section className="px-4 flex flex-col gap-2">
         <h2 className="font-medium text-2xl">Presensi Terbaru</h2>
-        <div className="w-full inline-block rounded-xl overflow-hidden outline outline-1 outline-primary">
-          <table className="w-full">
-            <thead className="bg-primary text-white text-left font-medium">
-              <tr className="border border-collapse border-primary rounded-md">
-                <th className="p-4">NIS</th>
-                <th className="font-medium">Nama Siswa</th>
-                <th className="text-center font-medium">Tanggal</th>
-              </tr>
-            </thead>
-            <tbody className="">
-              <tr className="border-t border-collapse border-primary rounded-md">
-                <td className="p-4">543211165</td>
-                <td>Marvello Adwitya Nyahu</td>
-                <td className="text-center">23-08-2023</td>
-              </tr>
-              <tr className="border-t border-collapse border-primary rounded-md">
-                <td className="p-4">543211173</td>
-                <td>Muhammad Radja Saputro</td>
-                <td className="text-center">20-08-2023</td>
-              </tr>
-              <tr className="border-t border-collapse border-primary rounded-md">
-                <td className="p-4">543211175</td>
-                <td>Muhammad Sahal Mahfuuzh</td>
-                <td className="text-center">18-08-2023</td>
-              </tr>
-              <tr className="border-t border-collapse border-primary rounded-md">
-                <td className="p-4">543211175</td>
-                <td>Ahrian Al Varel</td>
-                <td className="text-center">18-08-2023</td>
-              </tr>
-              <tr className="border-t border-collapse border-primary rounded-md">
-                <td className="p-4">543211187</td>
-                <td>Tyas Angelina Dwi Putri</td>
-                <td className="text-center">11-08-2023</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <PresensiTable />
       </section>
     </main>
   );
