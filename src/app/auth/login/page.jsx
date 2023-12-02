@@ -29,7 +29,7 @@ const Login = () => {
     },
     onSuccess: (response, variables, context) => {
       setUser({
-        name: response?.data?.data?.nama,
+        name: response?.data?.user?.name,
         token: response?.data?.access_token,
       });
 

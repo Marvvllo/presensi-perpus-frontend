@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 const navLinks = [
   {
@@ -54,7 +56,7 @@ const navLinks = [
     ),
   },
   {
-    label: "admin",
+    label: "Admin",
     href: "/admin/admin",
     icon: (
       <svg
@@ -73,13 +75,53 @@ const navLinks = [
   },
 ];
 
+const sidebarVariants = {
+  closed: {
+    width: "64px",
+  },
+  open: {
+    width: "200px",
+  },
+};
+
+const linkVariants = {
+  open: {
+    opacity: 1,
+    transition: {
+      duration: 0.2,
+    },
+    transitionEnd: {
+      display: "block",
+    },
+  },
+  closed: {
+    opacity: 0,
+    display: "none",
+
+    transition: {
+      duration: 0.2,
+    },
+  },
+};
+
 const Sidebar = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
   return (
-    <aside class="flex flex-col gap-4 bg-primary p-4 justify-between text-white font-medium">
+    <motion.aside
+      layout
+      animate={isNavOpen ? "open" : "closed"}
+      variants={sidebarVariants}
+      class="flex flex-col gap-4 bg-primary p-4 justify-between text-white font-medium"
+    >
       <div>
         {/* Controls */}
         <div class="flex flex-row gap-4 pb-4">
-          <button id="sidebarButton">
+          <button onClick={() => toggleNav()} id="sidebarButton">
             <svg
               class="w-8 h-auto text-white py-2"
               xmlns="http://www.w3.org/2000/svg"
@@ -95,15 +137,23 @@ const Sidebar = () => {
               />
             </svg>
           </button>
-          <div class="bg-white rounded-lg p-2" id="navImage">
-            <Image
-              class="w-32"
-              src="/images/logo-md.png"
-              width={32}
-              height={32}
-              alt="Logo SMK Telkom Banjarbaru"
-            />
-          </div>
+          <motion.div
+            animate={isNavOpen ? "open" : "closed"}
+            variants={linkVariants}
+          >
+            <div
+              class="grid place-items-center bg-white rounded-lg p-2"
+              id="navImage"
+            >
+              <Image
+                class="w-24"
+                src="/images/logo-md.png"
+                width={899}
+                height={240}
+                alt="Logo SMK Telkom Banjarbaru"
+              />
+            </div>
+          </motion.div>
         </div>
 
         {/* List */}
@@ -115,9 +165,13 @@ const Sidebar = () => {
                 class="flex flex-row gap-2 items-center"
               >
                 {link.icon}
-                <p class="nav-link transition-all text-lg">
+                <motion.p
+                  animate={isNavOpen ? "open" : "closed"}
+                  variants={linkVariants}
+                  class="nav-link transition-all text-lg"
+                >
                   {link.label}
-                </p>
+                </motion.p>
               </a>
             </li>
           ))}
@@ -137,10 +191,15 @@ const Sidebar = () => {
             clip-rule="evenodd"
           />
         </svg>
-
-        <p class="transition-all nav-link text-lg">Logout</p>
+        <motion.p
+          animate={isNavOpen ? "open" : "closed"}
+          variants={linkVariants}
+          class="transition-all nav-link text-lg"
+        >
+          Logout
+        </motion.p>
       </a>
-    </aside>
+    </motion.aside>
   );
 };
 
