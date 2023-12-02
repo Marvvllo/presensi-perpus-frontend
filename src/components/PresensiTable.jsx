@@ -115,7 +115,7 @@ const PresensiTable = () => {
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     enableSortingRemoval: false,
-    debugTable: true,
+    // debugTable: true,
   });
 
   if (isLoading) return <p>Loading...</p>;

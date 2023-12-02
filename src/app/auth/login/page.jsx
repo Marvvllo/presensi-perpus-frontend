@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import useSessionStore from "@/stores/sessionStore";
 import axios from "axios";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const router = useRouter();
@@ -33,9 +33,9 @@ const Login = () => {
         token: response?.data?.access_token,
       });
 
-      console.log(response?.data?.user?.name);
+      // console.log(response?.data?.user?.name);
       setError("Success");
-      router.push("/");
+      router.push("/admin");
     },
   });
 

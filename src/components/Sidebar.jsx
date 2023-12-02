@@ -3,6 +3,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import useSessionStore from "@/stores/sessionStore";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
   {
@@ -107,6 +109,17 @@ const linkVariants = {
 
 const Sidebar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const router = useRouter();
+
+  // Handle Logout
+  const sessionLogout = useSessionStore(
+    (state) => state.sessionLogout
+  );
+
+  const handleLogout = () => {
+    sessionLogout();
+    router.push("/auth/login");
+  };
 
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
@@ -179,8 +192,8 @@ const Sidebar = () => {
         </ul>
       </div>
       {/* Logout */}
-      <Link
-        href="/auth/logout"
+      <button
+        onClick={() => handleLogout()}
         className="flex flex-row gap-2 items-center"
       >
         <svg
@@ -202,7 +215,7 @@ const Sidebar = () => {
         >
           Logout
         </motion.p>
-      </Link>
+      </button>
     </motion.aside>
   );
 };

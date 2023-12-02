@@ -1,5 +1,8 @@
+"use client";
+
 import Sidebar from "@/components/Sidebar";
 import React from "react";
+import isAuth from "@/Components/AuthGuard";
 
 const AdminLayout = ({ children }) => {
   return (
@@ -11,4 +14,4 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-export default AdminLayout;
+export default isAuth(AdminLayout);
