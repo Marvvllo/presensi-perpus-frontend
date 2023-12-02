@@ -7,10 +7,17 @@ import {
   useReactTable,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import useSessionStore from "@/stores/sessionStore";
 import axios from "axios";
 import Link from "next/link";
+import PureModal from "react-pure-modal";
+import "react-pure-modal/dist/react-pure-modal.min.css";
+import { useRouter } from "next/navigation";
 
 const PresensiTable = () => {
   const token = useSessionStore((state) => state.token);
@@ -79,8 +86,8 @@ const PresensiTable = () => {
           </Link>
 
           {/* Tombol Hapus */}
-          <Link
-            href={`/admin/presensi/delete/${props.row.original.id}`}
+          <button
+            onClick={() => openDeleteModal(props.row.original.id)}
             className="flex justify-center custom-outline w-10 py-2 hover:bg-primary hover:text-white transition"
           >
             <svg
@@ -97,12 +104,13 @@ const PresensiTable = () => {
                 d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
               />
             </svg>
-          </Link>
+          </button>
         </span>
       ),
     }),
   ];
 
+  // Sorting table
   const [sorting, setSorting] = useState(null);
 
   const table = useReactTable({
@@ -117,6 +125,15 @@ const PresensiTable = () => {
     enableSortingRemoval: false,
     // debugTable: true,
   });
+
+  // State untuk modal delete
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [idPresensi, setIdPresensi] = useState(0);
+
+  const openDeleteModal = (idPresensi) => {
+    setIsModalOpen(true);
+    setIdPresensi(idPresensi);
+  };
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -173,7 +190,78 @@ const PresensiTable = () => {
           ))}
         </tbody>
       </table>
+      <ModalDelete
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        idPresensi={idPresensi}
+        token={token}
+      />
     </div>
+  );
+};
+
+export const ModalDelete = ({
+  isModalOpen,
+  setIsModalOpen,
+  idPresensi,
+  token,
+}) => {
+  const router = new useRouter();
+
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: (formData) => {
+      return axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/presensi/${idPresensi}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    },
+    onError: (error, variables, context) => {
+      console.log(error);
+    },
+    onSuccess: (response, variables, context) => {
+      // console.log(response?.data?.user?.name);
+      setIsModalOpen(false);
+      queryClient.invalidateQueries("presensi");
+    },
+  });
+
+  return (
+    <PureModal
+      className="rounded-md"
+      header={`Hapus presensi dengan ID ${idPresensi}?`}
+      footer={
+        <div className="flex flex-row gap-4">
+          <button
+            onClick={() => deleteMutation.mutate()}
+            className="rounded-md px-2 py-0.5 my-2 bg-primary text-white font-medium hover:bg-transparent hover:text-primary transition outline-1 outline outline-primary"
+          >
+            Hapus
+          </button>
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="rounded-md px-2 py-0.5 my-2 font-medium hover:bg-primary hover:text-white transition outline-1 outline outline-primary"
+          >
+            Batal
+          </button>
+        </div>
+      }
+      isOpen={isModalOpen}
+      closeButton="x"
+      closeButtonPosition="bottom"
+      onClose={() => {
+        setIsModalOpen(false);
+        return true;
+      }}
+    >
+      <p>Aksi ini tidak dapat dibalikkan.</p>
+    </PureModal>
   );
 };
 

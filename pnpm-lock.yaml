@@ -29,6 +29,9 @@ dependencies:
   react-dom:
     specifier: ^18
     version: 18.0.0(react@18.0.0)
+  react-pure-modal:
+    specifier: ^2.2.5
+    version: 2.2.5(react-dom@18.0.0)(react@18.0.0)
   zustand:
     specifier: ^4.4.7
     version: 4.4.7(react@18.0.0)
@@ -859,6 +862,16 @@ packages:
       loose-envify: 1.4.0
       react: 18.0.0
       scheduler: 0.21.0
+    dev: false
+
+  /react-pure-modal@2.2.5(react-dom@18.0.0)(react@18.0.0):
+    resolution: {integrity: sha512-XjmUzAdMOa0FtFZgTbVRiYBaxy5M2LdQHILlrV7FKthCiCV0XbTjr25Z1/1HR0roMrNSgBV4DGYGgwS1xh5Suw==}
+    peerDependencies:
+      react: ^15.3.0 || ^16.0 || ^17.0 || ^18.0
+      react-dom: ^15.3.0 || ^16.0 || ^17.0 || ^18.0
+    dependencies:
+      react: 18.0.0
+      react-dom: 18.0.0(react@18.0.0)
     dev: false
 
   /react@18.0.0:
