@@ -22,3 +22,7 @@
   font-weight: 700;
   font-style: normal;
 }
+
+.custom-outline {
+  @apply rounded-xl outline outline-1 outline-primary;
+}

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import useSessionStore from "@/app/stores/sessionStore";
+import useSessionStore from "@/stores/sessionStore";
 import axios from "axios";
 import { redirect, useRouter } from "next/navigation";
 
