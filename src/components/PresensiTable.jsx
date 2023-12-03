@@ -55,7 +55,16 @@ const PresensiTable = () => {
     }),
     columnHelper.accessor("tanggal", {
       header: () => <span>Tanggal</span>,
-      cell: (info) => <p>{info.getValue()}</p>,
+      cell: (info) => (
+        <p>
+          {new Date(info.getValue()).toLocaleDateString("id-id", {
+            weekday: "long",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+        </p>
+      ),
       footer: (info) => info.column.id,
     }),
 
@@ -122,7 +131,7 @@ const PresensiTable = () => {
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    enableSortingRemoval: false,
+    // enableSortingRemoval: false,
     // debugTable: true,
   });
 

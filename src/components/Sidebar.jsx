@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import useSessionStore from "@/stores/sessionStore";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const navLinks = [
   {
@@ -112,12 +113,20 @@ const Sidebar = () => {
   const router = useRouter();
 
   // Handle Logout
-  const sessionLogout = useSessionStore(
-    (state) => state.sessionLogout
-  );
+  const { token, sessionLogout } = useSessionStore();
 
   const handleLogout = () => {
     sessionLogout();
+    axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/logout`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     router.push("/auth/login");
   };
 
@@ -130,7 +139,7 @@ const Sidebar = () => {
       layout
       animate={isNavOpen ? "open" : "closed"}
       variants={sidebarVariants}
-      className="flex flex-col gap-4 bg-primary p-4 justify-between text-white font-medium"
+      className="flex flex-col gap-4 bg-primary p-4 justify-between text-white font-medium sticky top-0 h-screen"
     >
       <div>
         {/* Controls */}
