@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import useSessionStore from "@/stores/sessionStore";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const Login = () => {
       );
     },
     onError: (error, variables, context) => {
-      // console.log(error.response?.data?.data?.name[0])
+      console.log(error);
       setError("Email atau password salah.");
       setTimeout(() => {
         setError("");
@@ -35,7 +36,12 @@ const Login = () => {
 
       // console.log(response?.data?.user?.name);
       setError("Success");
-      router.push("/admin");
+      toast.success("Login Berhasil.", {
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        router.push("/admin");
+      }, 3000);
     },
   });
 
