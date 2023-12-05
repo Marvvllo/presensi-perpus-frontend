@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const CreatePresensi = () => {
   const router = useRouter();
@@ -35,6 +36,9 @@ const CreatePresensi = () => {
     onSuccess: (response, variables, context) => {
       // console.log(response?.data?.user?.name);
       setError("Success");
+      toast.success("Data berhasil ditambah.", {
+        autoClose: 3000,
+      });
       router.push("/admin/presensi");
     },
   });

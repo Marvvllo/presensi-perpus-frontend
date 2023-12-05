@@ -18,6 +18,7 @@ import Link from "next/link";
 import PureModal from "react-pure-modal";
 import "react-pure-modal/dist/react-pure-modal.min.css";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const PresensiTable = () => {
   const token = useSessionStore((state) => state.token);
@@ -238,6 +239,9 @@ export const ModalDelete = ({
       // console.log(response?.data?.user?.name);
       setIsModalOpen(false);
       queryClient.invalidateQueries("presensi");
+      toast.success("Data berhasil dihapus.", {
+        autoClose: 3000,
+      });
     },
   });
 

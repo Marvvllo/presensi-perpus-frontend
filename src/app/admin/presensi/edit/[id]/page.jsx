@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const EditPresensi = ({ params }) => {
   const id = params.id;
@@ -53,6 +54,9 @@ const EditPresensi = ({ params }) => {
     onSuccess: (response, variables, context) => {
       // console.log(response?.data?.user?.name);
       setError("Success");
+      toast.success("Data berhasil diubah.", {
+        autoClose: 3000,
+      });
       router.push("/admin/presensi");
     },
   });
@@ -62,7 +66,6 @@ const EditPresensi = ({ params }) => {
 
     const formData = new FormData(event.currentTarget);
     mutation.mutate(formData);
-    console.log(formData);
   }
 
   if (isLoading) return <p>Loading...</p>;
